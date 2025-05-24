@@ -1,0 +1,23 @@
+services:
+  redis:
+    image: redis:7.0
+    ports:
+      - "6379:6379"
+
+  producer:
+    build:
+      context: .
+    volumes:
+      - .:/app
+    working_dir: /app
+    command: python3 producer.py
+
+  consumer:
+    build:
+      context: .
+    volumes:
+      - .:/app
+    working_dir: /app
+    command: python3 consumer.py
+    depends_on:
+      - redis

@@ -1,0 +1,13 @@
+import redis
+import time
+
+r = redis.Redis(host='redis', port=6379)
+
+
+
+for i in range(20):
+    task = f"Task-{i}"
+    r.rpush('tasks', task)
+    print(f"Produced: {task}")
+    time.sleep(0)
+

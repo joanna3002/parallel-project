@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  redis:
+    image: redis:7.0
+    container_name: redis
+    ports:
+      - "6379:6379"
+    networks:
+      - parallel-net
+
+  producer:
+    build:
+      context: .
+      dockerfile: Dockerfile.producer  # Change if your Dockerfile has a different name
+    container_name: producer
+    depends_on:
+      - redis
+    networks:
+      - parallel-net
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+
+  consumer:
+    build:
+      context: .
+      dockerfile: Dockerfile.consumer  # Change if your Dockerfile has a different name
+    container_name: consumer
+    depends_on:
+      - redis
+    networks:
+      - parallel-net
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+
+networks:
+  parallel-net:
+    driver: bridge
+
+
